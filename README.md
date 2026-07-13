@@ -11,5 +11,5 @@ This repository contains my personal notes while learning:
 - Networking
 - Cyber Security
 
-Started: July 2026 🚀
+Started: July 2026 
 
