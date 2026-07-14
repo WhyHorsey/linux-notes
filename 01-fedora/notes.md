@@ -72,6 +72,7 @@ Something that you need to be careful when dual booting though, is that you need
 For example, my C drive is entirely only for Windows (around 180 gb) meanwhile my D drive (around 750 gb) is where I stored all my data. 
 
 When you dual booting, I recommend you shrink your D drive around 100-200 gb for your Linux OS, because usually when Windows rolls out a major update, it can messed with your other OS.
+
 ---
 
 ## Secure Boot
