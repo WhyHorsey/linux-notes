@@ -1,15 +1,16 @@
 # Linux Notes
 
-Hi!
+This repository documents my journey of learning Linux from scratch.
 
-This repository contains my personal notes while learning:
+I started learning Linux in July 2026 as preparation for studying Cyber Security.
 
-- Fedora Linux
-- Git
-- GitHub
-- Bash
-- Networking
-- Cyber Security
+The goal of this repository is not to teach Linux, but to document what I learn along the way.
 
-Started: July 2026 
+## Chapters
 
+- 01 - Fedora
+- 02 - Ricing (coming soon)
+- 03 - Git (coming soon)
+- 04 - Docker (coming soon)
+- 05 - Networking (coming soon)
+- ...
