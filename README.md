@@ -9,8 +9,8 @@ The goal of this repository is not to teach Linux, but to document what I learn 
 ## Chapters
 
 - 01 - Fedora
-- 02 - Ricing (coming soon)
-- 03 - Git (coming soon)
+- 02 - Git (in progress)
+- 03 - Ricing (coming soon)
 - 04 - Docker (coming soon)
 - 05 - Networking (coming soon)
 - ...
