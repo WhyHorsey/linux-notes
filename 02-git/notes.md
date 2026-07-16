@@ -147,6 +147,71 @@ I will explain them in the next chapter which is ........
 
 # 🌐 GitHub 
 
+As many of you, I really though that Git and GitHub are just the same thing, but after learning and explaining how Git works, why it exists, and the use case of Git in the previous chapter, I'm sure you, and even I if my memory somehow erased by now, will probably starting to understand what GitHub really is.
+
+GitHub is basically a server to upload your local Git repository. Think of it like this:
+
+Git ---> MS Word/Documents
+GitHub ---> Google Drive
+
+Pretty simple right?
+
+After finally understanding all of that I think I'm ready to finally "publish" my repository to GitHub. 
+
+But first I need to introuduce to the gloriou SSH key and how it connected to your GitHub authentication.
+
+Now, I will actually talk about this more in depth on different notes altogether, so keep that in my mind. However, I will still try to gives you a rough idea of what is SSH key is based on my understanding and experience. We will mostly talk about the "key" here, because that's what relevant to our case here of connecting to GitHub.
+
+If you heard of home server and self-hosting, you might be familiar with the term already because it's everywhere in that community. So, when I learn about them for the first time, I just think they're just one of the component of building a home server and nothing else. But the more I learn about them, the more I actually become amaze about what they can REALLY DO.
+
+Think of SSH key like a two-piece "padlock" system that allows you to open a secret "door" without needing a password. Instead of one metal key, it uses two special "key" that are mathemathically related (don't worry too much about it, for now at least), a Public Key (the lock) and a Private Key (the precious secret key).
+
+Public Key ---> This is a "padlock" that you can make copies of and give to anyone. You throw this padlock onto the remote door (in this case GitHub). Everyone can see it, but having the lock doesn't let them open the door.
+
+Private Key ---> This is the one and only physical key that fits perfectly into that padlock. You must keep this safely hidden inside your own computer and never show it to anyone.
+
+You might see what I'm going with this, so essentially you gives your Public Key to GitHub, and when you want to authenticate, GitHub will ask you THE Private Key to open that "padlock" (your Public Key).
+
+Why doing this, well to secure your account and repostory of course, because if you don't have a way to authenticate yourself, anyone can just edit and upload nonsense to your repo and account as long as they link the proper url.
+
+So, after learning that, of course I immediately decided to setup it.
+
+And surprisingly enought, it went pretty smoothly.
+
+First you need to actually make a GitHub account if that's haven't clear enough.
+
+Then I found that I need to run the command `ssh-keygen -t ed25519 -C "emailgithub@example.com"` to generate a SSH key. The reason for why I want to use the `Ed25519` algorithm is....... that's for another day. (I actually didn't know the difference between all of this algorithm lol, at least not yet).
+
+After I run those command, turns out it will create a .ssh folder in my home directory.
+
+It then prompt me to create a passphrase, now look, this is optional, but whenever I see a security feature there's just an itch in my brain to immediately use it. (I think Windows and all of it's malware and data leaks kinda traumatize me a bit lol).
+
+Now I need to run the SSH agent, which basically act like a y'know, agent to "help" you so you don't need to enter your passphrase over and over again when trying to connect to a server.
+
+A simple `eval "$(ssh-agent -s)"` will do the job.
+
+Now I just need to add the key, by using the command `ssh-add ~/.ssh/id_ed25519`. If you create a passphrase, then you need to enter it here.
+
+And..... basically done, I totally didn't expect for it go so smoothly. Now I just need to copy my public key to GitHub, and I'm fine.
+
+After that, I just need to test it if works by using the `ssh -T git@github.com` and finally, the message that I was waiting for "Hi WhyHorsey! You've successfully authenticated..."........ 
+
+It's just feel so good.
+
+Thatt is certainly a long one, but after this, we actually just need to connect our repo to GitHub using the `git remote` command, I just need to run `git remote add origin git@github.com:youraccount/example-projects.git` and will do the rest for me.
+
+Now I just need to run the final command to finally.... upload my repo to GitHub.
+
+`git push -u origin main`...... and then when I check GitHub, it's there. My repo is there!!!!
+
+That's honetly feel soo satistfying and I don't know why, maybe it's feeling of completing a task, or a feeling of understanding new things, or maybe just a feeling of realizing the first step towards something greater than this.
+
+## Command Breakdown 
+
+
+
+
+
 
 
 
