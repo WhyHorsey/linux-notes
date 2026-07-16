@@ -127,6 +127,26 @@ You don't, and I repeat, don't need to run `git init` anymore, especially when y
 
 ## Common Git Commands 
 
+| Command       | What it does                                                              |
+| ------------- | ------------------------------------------------------------------------- |
+| `git init`    | Initializes a local Git repository by creating a hidden `.git` directory. |
+| `git status`  | Shows the current state of your repository.                               |
+| `git add`     | Stages changes for the next commit.                                       |
+| `git commit`  | Creates a snapshot of the staged changes.                                 |
+| `git log`     | Shows the commit history.                                                 |
+| `git diff`    | Shows the differences between versions of your repository.                |
+| `git restore` | Restores files to a previous state.                                       |
+
+There's a lot more command than this, but as I said from the very beggining, I'm also still learning, so I still have a lot to learn myself. But hey, at least we're learning together.
+
+As for other commands that I do know but decide to not show here like, `git push`, `git pull`, `git clone`, `git remote`.....
+
+I will explain them in the next chapter which is ........
+
+---
+
+# 🌐 GitHub 
+
 
 
 
