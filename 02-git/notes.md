@@ -149,9 +149,10 @@ I will explain them in the next chapter which is ........
 
 As many of you, I really though that Git and GitHub are just the same thing, but after learning and explaining how Git works, why it exists, and the use case of Git in the previous chapter, I'm sure you, and even I if my memory somehow erased by now, will probably starting to understand what GitHub really is.
 
-GitHub is basically a server to upload your local Git repository. Think of it like this:
+GitHub is basically a server to host and upload your local Git repository. Think of it like this:
 
 Git ---> MS Word/Documents
+
 GitHub ---> Google Drive
 
 Pretty simple right?
@@ -170,9 +171,9 @@ Public Key ---> This is a "padlock" that you can make copies of and give to anyo
 
 Private Key ---> This is the one and only physical key that fits perfectly into that padlock. You must keep this safely hidden inside your own computer and never show it to anyone.
 
-You might see what I'm going with this, so essentially you gives your Public Key to GitHub, and when you want to authenticate, GitHub will ask you THE Private Key to open that "padlock" (your Public Key).
+You might see what I'm going with this, so essentially you give GitHub your public key. Later, whenever you connect, GitHub sends your computer a random "challenge". Your computer then uses your private key to create a digital signature proving that it owns the matching key pair. GitHub can verify that signature using your public key, without ever seeing your private key. Why it can do this you ask? Well it deserves it owns notes, because seriously, it will blow your mind (it did to me).
 
-Why doing this, well to secure your account and repostory of course, because if you don't have a way to authenticate yourself, anyone can just edit and upload nonsense to your repo and account as long as they link the proper url.
+This is all for, well to secure your account and repostory of course, because if you don't have a way to authenticate yourself, anyone can just edit and upload nonsense to your repo and account as long as they link the proper url.
 
 So, after learning that, of course I immediately decided to setup it.
 
@@ -207,6 +208,58 @@ Now I just need to run the final command to finally.... upload my repo to GitHub
 That's honetly feel soo satistfying and I don't know why, maybe it's feeling of completing a task, or a feeling of understanding new things, or maybe just a feeling of realizing the first step towards something greater than this.
 
 ## Command Breakdown 
+
+| Command       | What it does                                                                      |
+| ------------- | --------------------------------------------------------------------------------- |
+| `git push`    | Push (upload) your local repostitory to GitHub.                                   |
+| `git pull`    | Pull new changes made onto your GitHub repository to your local repo, merging it. |
+| `git remote`  | Connect your local repository to you GitHub repo, basically set it's destination. |
+| `git fetch`   | Same with pull but only downloads the data. You must manually merge it later.     |
+| `git merge`   | Merge changes from another branch into your current branch.                       |
+| `git clone`   | Downloads an exact copy of an existing GitHub repo onto your local computer.      |
+
+For `push`: 
+
+Edit file
+     │
+     ▼
+`git add`
+     │
+     ▼
+`git commit` (Local Repository (.git))
+     ▼
+`git push`
+     │
+     ▼
+GitHub
+
+For `pull`:
+
+GitHub
+     │
+     ▼
+`git pull`
+     │
+     ▼
+Local Repository
+
+For `fetch`:
+
+GitHub
+     │
+     ▼
+`git fetch`
+     │
+     ▼
+Local Repository
+     │
+     ▼
+`git merge`
+
+---
+
+# 🪾 Branches 
+
 
 
 
