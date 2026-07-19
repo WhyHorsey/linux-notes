@@ -371,6 +371,46 @@ This.... literally flip my understanding of Git upside down, wtf kekw.
 
 So back to our question earlier, when Git make a new branch it will NOT copy the progress we make to that newly created branch. Git just need to create a new label that point to the last commit, for example D, and when we or Git ask for it "history", D can just say, "well if you wanna know my history, just ask my parent." And so on until we comes to the earliest point in our commit.
 
+---
+
+## HEAD
+
+HEAD is basically, y'know... another pointer. (why there's so many of them?????).
+
+It's a pointer to what branch your currently at, specifically. Like for example:
+
+             HEAD
+
+              ↓
+
+            main
+
+              ↓
+
+A ---- B ---- C
+
+The HEAD in this case is pointing to main, because we're currently on that branch.
+
+If we switch branch however...
+
+             HEAD
+
+              ↓
+
+            feature-darkmode
+
+              ↓
+
+A ---- B ---- C
+
+Notice how it's now pointing in the feature branch (label).
+
+This is one of many misconception that I, and maybe some of you have when they learning for the first time. I thought that `git switch` is changing the position of the commit, but in reality, it's just changes the position of the HEAD.
+
+Ther's also a concept of **Detached HEAD** that basically move the HEAD to previous commit on the branch, but more on this later when we talk about `git log` and such.
+
+
+
 
 
 
