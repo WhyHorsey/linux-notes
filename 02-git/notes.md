@@ -260,6 +260,128 @@ Local Repository
 
 # 🪾 Branches 
 
+This will be a doozy one, because I myself is confused by this subject for quite some time.
+
+So, I think we need to start with understanding branches first.
+
+Imagine you have a repository, and in it, there's a `README.md` and a `program.py`. Your'e already commit a few times so, like, commit A, then B, then C and so on.
+
+Suddenly, one of your collaborator comes with a request to make, let's say a "dark mode" to your `program.py`.
+
+Ok, that's fine and dandy, so anyway, your started to code.
+
+But it turns out, that implementing that dark mode, requires a lot more than you think.
+
+You maybe need to change the UI, config, database, etc. So now your'e program is a mess.
+
+Butttt.... here's the thing, there's still some people that are using the latest commit on your "main" branch, so if you continue to commit on it, the latest version that are stable right now, are now become unusable.
+
+The solution to this before Git is to do.... whatever this is....
+
+`program/`
+`program_new/`
+`program_new2/`
+`program_darkmode/`
+`program_darkmode_fix/`
+`program_darkmode_final/`
+
+Yeah, I'm not a fan of it. This is essentially the same problem with in the previous "Why Git Exists" chapter, but this time it's not history, but rather, experiment.
+
+This where branches comes in, soooo..... what exactly is **Branches**????
+
+Think of it like a timeline different from your main branch. Like this for example:
+
+        main
+          ↓
+A ---- B ---- C  
+          ↑
+feature-darkmode
+
+When we make a new branch, or timeline, it still will be pointed to the same last commit that our main branch pointed at. Pay close attention because THIS will be important (trust me, I know).
+
+So when does the branches, well, started to be branched???
+
+If we let's say try to switch from our main branch to our feature branch, by using `git switch your-branch` command and started to make commit on those branch, we will have a graph of something like this:
+
+main
+
+A ---- B ---- C
+
+feature-darkmode
+
+A ---- B ---- C ---- D
+
+Now, this is not entirely accurate because this seem like everytime we make a new branch, Git just copy the "up to the last progress" to it, but we will talk about that later in this chapter. Now let's focus on thi first.
+
+When I know about this feature for the first time I thought it was soooo cool, because it's literally solve all of our problem from earlier.
+
+Now if the user download the program from the main branch, they will still got the latest stable realease. Meanwhile, we still will be able to experiment with our feature without effecting the main branch.
+
+And after we're done with our feature, we can just, "merge" it. And the result:
+
+A ---- B ---- C -------- F
+              \        /
+               D ---- E
+
+F is the commit, cause by the result of merging the feature branch with the main branch.
+
+What if the experiment turned out to be not succesfull? Well just delete it. Main branch still not affected, life is good.
+
+## Pointer
+
+This where a lot of misconception comes, even I become sooooo confused when learning about this. A lot of people, including me, probably thinks that everytime we make a branch, Git just copy the progress up to the last commit and start from there, but if that's the case, well, it will require a LOT of storage don't you think? So how do think they circumvent this?? Ohhhhh boy, your'e in for a treat.
+
+Ok, let's say....
+
+          main
+            ↓
+A ---- B ---- C
+
+"Main" here is just a label. That's it. Nothing more, nothing less. Right now it point to C because it was our last commit, but, if we make a new commit, for example....
+
+               main
+                 ↓
+A ---- B ---- C ---- D
+
+You can see that "main" now point to our latest new commit, which is D.
+
+When we make a branch, Git just add a new label to our existing graph. When we commit on said branch, it's more accurate to illustrate it like this:
+
+        main
+          ↓
+A ---- B ---- C
+              \
+               D
+               ↑
+feature-darkmode
+
+Notice how, our main branch still pointed at C, meanwhile our feature branch now pointed at D. And also pay attention of how D is actually PART of C, why?, well guess what, turns out ALL of our commit is also a pointer (yes, this is completely blow my mind when I learn it lol).
+
+So, for example right, commit C it's not just contain a file, it also contain that it "comes from commit B".
+
+Commit B is the same, it also contain that it "comes from commit A". And so on....
+
+So it's actually like this:
+
+A <---- B <---- C
+
+The arrow point to the **Parent**.
+
+This.... literally flip my understanding of Git upside down, wtf kekw.
+
+So back to our question earlier, when Git make a new branch it will NOT copy the progress we make to that newly created branch. Git just need to create a new label that point to the last commit, for example D, and when we or Git ask for it "history", D can just say, "well if you wanna know my history, just ask my parent." And so on until we comes to the earliest point in our commit.
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
