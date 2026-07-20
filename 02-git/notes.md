@@ -584,6 +584,115 @@ This is because hundreds of people are doing different task on different branch 
 
 And hey, that is also the reason why Git is soooo awesome. 
 
+---
+
+### Merge Conflict 
+
+Now, this is actually a concept that I only learned recently. So I might have not the best understanding of it, but I'll try my best to explain it in my term.
+
+I will start by asking you a question that some of you, are maybe already had since I the beggining of this whole chapter...
+
+"What if I edit the same line on the same file, while on a completely different branch and try to merge both of them? How would Git know which one to commit?"
+
+Well, as it's turns out, Git... doesn't know which one to commit really, that's why it asks YOU to edit the file in this case....
+
+Which if it isn't obvious enough from the title of this  subchapter, this concept is called a **Merge Conflict**.
+
+Let's say you have 2 different branch, main and feature.
+
+You have a file on the main branch called `hello.txt`, it contains one simple text that said "hello world".
+
+Now, let's say you switch branch from main to feature and edit the same file. You changed it to, like "hello linux" for example.
+
+After this, well you decided to switch to your main branch again, and.... guess what? Change the file again from it being "hello world", (remember, the changes we make in the feature branch doesn't affect the main branch yet) to "hello windows".
+
+After quite sometime, you decide to merge those two branch and..... well.... let just say it probably not what you expect. (trust me I know #2).
+
+This... is an interesting case to say the least, but not entirely uncommon especially if you have a lot of people working on your project.
+
+So, back to our question, how does Git handle this????
+
+Well, as I said before, Git will ask YOU specifically, to choose which **part** of the file to be commited.
+
+Notice how I say "part of the file" and not "the entire file"? Well, because Git is pretty smart actually. This is that something I, among many things, have also miss the concept for the first time.
+
+For example, in main you have a txt file that contains:
+
+"Hello Windows
+
+Version 1
+
+Created by WhyHorsey"
+
+And in the feature branch you edit the same file but like this....
+
+"Hello Linux
+
+Version 1
+
+Created by WhyHorsey"
+
+The one that are conflicted are only the "Hello..." part, while the rest are the same. So Git here doesn't ask you to "pick a file". Git jusk ask to clarify **that** specific part.
+
+Now imagined the same scenario but with:
+
+`main`
+
+"Hello World
+
+Version 2"
+
+`feature`
+
+"Hello World
+
+Version 2
+
+Dark mode"
+
+Is there a conflict?? NO!
+
+So Git doesn't need to ask you for the confirmation, it just merge it like normal. Since both branches modified different parts of the file, Git can safely combine both changes automatically.
+
+This state where Git still wasn't sure which one to commit and waiting for your confirmation, have a name actually.
+
+It's called the **Merging** state.
+
+If you check the `hello.txt` in the example before when on this stage, it will show you somehing like this:
+
+<<<<<<< HEAD
+hello windows
+=======
+hello linux
+>>>>>>> feature
+
+This is basically Git "leaving a note" for YOU. It literally said something like "The above comes from the HEAD, meanwhile the bottom comes from the feature branch. I didn't know which one to pick. Please edit it, like really please?" 
+
+Look, it so polite even when talking to fools like us lol.
+
+Now after you edit the file, you still need to actually run `git add` again to submit the changes.
+
+Remember, `git add` doesn't actually just "upload" your file. It specifically tells Git which changes that are ready to be commited.
+
+After you add your changes the it become like usual, just commit your changes, and now your graph should probably look like this:
+
+      B
+
+     / \
+
+A ---   H
+
+     \ /
+
+      C
+
+Before this, Git doesn't actually created a "merge commit" yet. It simply can't, because it doesn't even know what the final file should look like. Only after you resolve the conflict and stage the result can Git finally create the merge commit.
+
+
+
+
+
+
 
 
 
