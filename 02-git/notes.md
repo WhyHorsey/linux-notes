@@ -377,7 +377,7 @@ So back to our question earlier, when Git make a new branch it will NOT copy the
 
 HEAD is basically, y'know... another pointer. (why there's so many of them?????).
 
-It's a pointer to what branch your currently at, specifically. Like for example:
+It's a pointer to what position your currently at, specifically. Like for example:
 
              HEAD
 
@@ -389,7 +389,7 @@ It's a pointer to what branch your currently at, specifically. Like for example:
 
 A ---- B ---- C
 
-The HEAD in this case is pointing to main, because we're currently on that branch.
+The HEAD in this case is pointing to main, because we're currently on that positon.
 
 If we switch branch however...
 
@@ -407,7 +407,183 @@ Notice how it's now pointing in the feature branch (label).
 
 This is one of many misconception that I, and maybe some of you have when they learning for the first time. I thought that `git switch` is changing the position of the commit, but in reality, it's just changes the position of the HEAD.
 
-Ther's also a concept of **Detached HEAD** that basically move the HEAD to previous commit on the branch, but more on this later when we talk about `git log` and such.
+Ther's also a concept of **Detached HEAD** which, again, really prone to misconception. 
+
+Imagine you run a command like `git checkout B` for example. Where do you think the position of the HEAD will be??
+
+And what if we are to commit on that state??? What will happened???
+
+Ok, ok, first things first, I'm sure you by now will surely able to answer the first question. Yes, the HEAD now become "detached" from the "body". 
+
+Let's just say that the HEAD is a dog and you are the owner.
+
+The HEAD, or in this case, the "dog" will follow you around whenever you go, so when you try to switch branch by default, for example from "main" to "feature", the HEAD will come with you and be pointing at that branch, because that's where you're currently at.
+
+But when you run the `git checkout` command to move the pointer of the HEAD to specific location (commit) within the branch you're currently at, the "dog" in this case start roaming around by itself without your supervision. As I said before, the HEAD become "detached" from it's "body". That's why it's called the **Detached HEAD** state.
+
+But what if we are to commit in that state? Now here's the part where's it got intresting. Simply put the diagram basically become like this:
+
+                     main
+
+                      ↓
+
+A ---- B ---- C ---- D
+
+       \
+
+        E
+
+        ↑
+
+       HEAD
+
+The "main" is still at the last commit, and the HEAD is now pointing at the commit it makes from B, which is E.
+
+Now you may notice, that **ONLY** the HEAD that pointed to the E commit, this..... become quite a problem, because if, for example you want to switch to main again, it will become like this:
+
+                    HEAD
+
+                      ↓
+
+                     main
+
+                      ↓
+
+A ---- B ---- C ---- D
+
+       \
+
+        E
+
+Here's my question, who's exactly pointing at E right now? Well..... exactly NO ONE.
+
+This is the reason why when you try to move from the detached HEAD state after commiting, Git will ask you a question like "Hey, is this commit important? If you leave now, it will becomes difficult to reach later, just saying" or something like that.
+
+So what if you want to keep the commit that you make then?? Well, simple enough, you make a branch! (surely you don't see that coming based on the chapter name..... right?).
+
+Like this for example, `git branch experiment`:
+
+                     main
+
+                      ↓
+
+A ---- B ---- C ---- D
+
+       \
+
+        E
+
+        ↑
+
+       experiment
+
+And now after this, you can just merge it like normal.
+
+One question that you maybe had (because I do) after learning about this is.... what's exactly the point of detached HEAD state then, like if you want to just experiment, can't you just make a new branch????? 
+
+Well it's not that simple actually, first of all, even though they seem similar, they serves completely diffrent purpose.
+
+You use a detached HEAD when you want to act like a "time-traveling tourist", look at old code, run a quick experiment you fully expect to throw away, or debug a specific past issue. If you're happy with the result, sure, create a new branch and merge it, but if you don't like it or for most of the case, you just wanna to look around, you can just switch to your main branch like nothing happen.
+
+Meanwhile you use a new branch when you intend to build something new (especially since **normally** a new branch start of from your latest commit), save your progress reliably, collaborate with others, or eventually merge your code back into the main branch. 
+
+Also as I explain, a commit from the detahced HEAD state need to have a branch to merge it. So really, even **they** need each other lol.
+
+---
+
+## Merge 
+
+So I guess your'e probably can tell what `git merge` does by now. 
+
+Well.... it do exactly what is says. Merge two branch together. No false advertising here.
+
+Or is it???? (*vsauce music in the background).
+
+Yes, it does technically just merge two branch to become one just like I said in the very beggining, but HOW Git does it is really not what I thought it will be.
+
+For example, if our repo is like this:
+
+              main
+
+               ↓
+
+A ---- B ---- C
+
+              \
+
+               D ---- E
+
+                      ↑
+
+                     feature
+
+And we try to merge the two main branch together.... how will it look like????
+
+You may expect that Git will try to make a merge commit, like F for example.
+
+But what Git actually does in this specific case is something called, **Fast-Forward Merge**. Something like this:
+
+                            main
+
+                             ↓
+
+A ---- B ---- C ---- D ---- E
+                        
+Notice how there's no merge commit and that it's just a.... STRAIGHT line?
+
+This is happen because well, when feature branch is busy doing work, the main branch is just doing... nothing (what does he even do?).
+
+Git saw this and think "Well, since main doesn't move and technically feature already contains every commit reachable from main, he just doesn't see it cause the line is not straight, so I will just straighten the line". It also, well if you look at it from outsider perspective, just moving the pointer forward.... which is why it's called **Fast-Forward Merge**.
+
+It's a very oversimplification of this things but that's how it get stuck in my head.
+
+Now what if the main actually does something when feature is doing all of that work?? For example:
+
+                         main
+
+                          ↓
+
+                 D ---- E
+
+                /
+
+A ---- B ---- C
+
+                \
+                 F ---- G
+
+                         ↑
+
+                          feature
+
+Git here... is confused if you can't tell.
+
+If it try to follow the feature trail, then D and E will not be reachable, but if it try to follow the main trail the F and G will not be reachable.
+
+This is where the merge commit comes in:
+
+                 D ---- E
+
+                /        \
+
+A ---- B ---- C          H
+
+                \        /
+
+                 F ---- G
+
+H here is the merge commit, and just as what I explain in the previous subchapter, it now have two parents, G and E.
+
+So merge commit really not a mandatory addition like I thought before.
+
+Merge commit exists because both histories have diverged, and Git needs a new commit that has both histories as its parents.
+
+Now, here's something funny and intresting to look at, if you go to the Linux Kernel repo in github... you can see there's a LOT of merge commit.
+
+This is because hundreds of people are doing different task on different branch at the same time and fast-forward merges become much less common because both branches usually continue receiving commits lot of commits, and I mean LOTS of commits.
+
+And hey, that is also the reason why Git is soooo awesome. 
+
 
 
 
