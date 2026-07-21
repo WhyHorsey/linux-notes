@@ -662,7 +662,9 @@ If you check the `hello.txt` in the example before when on this stage, it will s
 
 <<<<<<< HEAD
 hello windows
+
 =======
+
 hello linux
 >>>>>>> feature
 
@@ -688,12 +690,63 @@ A ---   H
 
 Before this, Git doesn't actually created a "merge commit" yet. It simply can't, because it doesn't even know what the final file should look like. Only after you resolve the conflict and stage the result can Git finally create the merge commit.
 
+---
 
+## Command Breakdown 
 
+Basic Branches Command:
 
+| Command                  | What it does                               | 
+| ------------------------ | ------------------------------------------ | 
+| `git branch`             | See branch list.                           | 
+| `git branch <name>`      | Create a new branch.                       | 
+| `git switch <branch>`    | Switch to a different branch.              |
+| `git switch -c <branch>` | Create a branch & immediately switch to it.| 
+| `git branch -d <branch>` | Delete branch that are not used anymore.   | 
+| `git branch -D <branch>` | Forcibly delete a branch.                  | 
+| `git log`                | See commit history.                        | 
+| `git log --graph`        | See the graph of branches and merges.      | 
+| `git show <commit>`      | See a detail of a commit.                  |
 
+Basic Merge Command:
 
+| Command                  | What it does                                                           | 
+| ------------------------ | ---------------------------------------------------------------------- | 
+| `git merge <branch>`     | Merge the history of the selected branch to currently active branch.   | 
+| `git merge --abort`      | Cancel the merging process that are currently happening.               | 
 
+HEAD and detached HEAD:
+
+| Command                  | What it does                                                           | 
+| ------------------------ | ---------------------------------------------------------------------- | 
+| `git checkout <commit>`  | Go to that specific commit.                                            | 
+| `git switch -`           | Return to the previous branch.                                         | 
+
+Repository Information:
+
+| Command                                   | What it does                               | 
+| ----------------------------------------- | ------------------------------------------ | 
+| `git config --list`                       | See Git configuration.                     | 
+| `git config --global user.name "Nama"`    | Configure the username.                    | 
+| `git config --global user.email "email"`  | Configure commit email.                    |
+
+---
+
+# 🫡 Closing (for now)
+
+This is all the things that I have been learned from now, and I think even though it's not really cover the entirety of Git whole system, I think it's good enought as basic going forward.
+
+Dont't get me wrong tho, I'm still not done with Git, there's soooo much more that I want and WILL learn about it, my journey here still has a long way to go, and this is only the beggining.
+
+You know, at first when I learned about Git, I really thought that I will not find much use case for it besides storing my college projects. I though that it's just a bunch of commands that I wouldn't even bother to understand because.... what's the point?
+
+But after I started to dig deep into how Git actually works, understanding that most of Git can be explained using "pointers", understanding how Git organize my work and it's history.... I started to appreaciating it more and more. Once you know how it function, the commands stop feeling like an incomprehensible words of magic, and instead become, surprisingly predictable. 
+
+And that's my friend, is the joy of **learning**.
+
+Honestly, Linus really cooked with this one, huh? (kekw).
+
+I will definitely update this notes in the near future, but for now, I will move on to another topic altogether. See you in my next chapter!!
 
 
 
