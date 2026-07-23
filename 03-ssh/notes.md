@@ -333,9 +333,92 @@ And this system is not only for SSH, it's also on TLS, Windows Hello, Passkey...
 
 ## Known Hosts
 
+So far we've been able to "solve" the issue of verifying our identitiy.
 
+However.... it brings out another question, yes, GitHub, and any other service that are trying to verify our identity using ssh, **can** do exactly that, it's simple enough. But, how do **WE** know that the service we're in connection with, is the real one????
 
+What if it's some malicious hacker trying to intervened in our connection, and disguised as the service??
 
+This situation is famously called, **Man in the Middle** or MITM for short.
 
+The visualisation is kinda like this:
 
+Laptop
+
+↓
+
+😈 Hacker
+
+↓
+
+GitHub
+
+The hacker, quite literally, in the middle.
+
+Now, this not actually bad at all, why? Because even if they successfully disguised themselves "GitHub", they didn't actaully have GitHub *PRIVATE KEY*!!!
+
+Yes, it turns out, GitHub, and any other services for that matter, is also have a pair of these magical keys (lmao). It's..... aghhh I don't even know why this fact didn't even registered to me sooner lol.
+
+Anyway, because of that, everytime we "contact" GitHub, it actaully show its *public host key* to our device, our device then verify that key by matching it to our saved **"known host"**.
+
+When we created our SSH key, and connecting to a server for the first time, SSH will generated a file on our system called "known_hosts".
+
+It usually stored in `~/.ssh/known_hosts`, but honestly it depends on where you stored your shh file.
+
+This file, is basically, as it named suggest, listed off a bunched of server that we have connected before along with its "public host key" and its "fingerprint" which, in simpler term is the "summary of the host key". If you think the host key as 500 page book, then the fingerprint is like the ISBN.
+
+When we tried to, for example, push our local repo to our remote repo to GitHub, our device will then check if the "fingerprint" of this server right no, is the same with the one in "known_hosts". If it's different, turns out SSH will also give you a warning (how nice), by telling you "🚨 WARNING!!! REMOTE HOST IDENTIFICATION HAS CHANGED!" or something like that, I actually haven't gotten this message at all (fortunately, lol).
+
+When this happened, there's two possibilities, either GitHub changed it's public host key, or it's a malicious person trying to disguide themselves as GitHub.
+
+The first one is likely not the case, because even if GitHub does changed it host key, usually they will, y'know, inform their community and user about it.
+
+The second one though.... ho ho ho... yeah, it's probably the second one.
+
+If that's the case, then what you should definitely do is NOT trying to remove your list of "know_hosts". Like, really, please.
+
+Now, what if it's your first time connecting to a server though??? And at the same time, a malicious hacker is also trying to diguised themselves as that server... what did you do???
+
+There's unfortunately, no available way for SSH itself to automatically solve this problem.
+
+This is because our device is not yet established a "connection" to this server, so there's no known hosts to use as a base of verification.
+
+Before you connected through ssh, it will prompted you with this message:
+
+"The authenticity of host 'server.com'
+
+can't be established.
+
+Fingerprint:
+
+SHA256:xxxxxxxx
+
+Continue?
+
+yes/no"
+
+If you click yes in this case, and it's turns out the server is actually just a disguised hacker... well then, good luck brother...
+
+SSH use a system known as **TOFU**, or **"Trust on First Use"**, which mean as long as *you* stated that you trust the "host" it will then trusted those same host for as long as it has the same fingerprint.
+
+Now, you might be, after reading this, feel like that SSH is bad now because of this... But, honestly, try to think of what of the chances of that particular scenarion happening. If you just an ordinary person living ordinary live and just cared a littleeeeee bit about yor network security, then you will almost defintely not encounter this problem at all.
+
+Like, for this to happened, the hacker need:
+
+-To be in your connection line,
+-Can intervened with that specific line,
+-Be able to disguised as a sever,
+-And everything happened at the same time as you first time connected.
+
+Yeah, I rather roll in my newest gacha banner instead of hoping that THIS paritcular scenario is happening (kekw).
+
+This doesn't mean MITM attacks never happen though. They absolutely do, especially on compromised networks. It's just that, for most home users connecting to well-known services like GitHub over HTTPS and SSH, the first connection MITM scenario is relatively a myth.
+
+If you're wondering why SSH doesn't simply ask GitHub every time whether its key is correct, remember that the whole problem is that we don't *yet* know if we're really talking to GitHub. If someone is already disguised as GitHub, then asking "are you really GitHub?" would just result in the hacker answering "yep, of course, trust me bro".
+
+Ok, ok, but how do these server circumvent this??
+
+Well, GitHub for example publicly put out its SSH host key in their documentation, and other server also probably do this as well.
+
+One thing that I found really intresting, is that, some big corporation actually just already have a list of different fingerprint of different server, and every laptop employee is already known all it hosts since the beggining.
 
