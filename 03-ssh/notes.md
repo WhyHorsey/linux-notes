@@ -221,38 +221,120 @@ You give it your passphrase, and everytime a someone try to verify your identity
 
 # 🔓 Generating An SSH Key 
 
+Creating a pair of SSH key is honestly such a simple process, but I'm here gonna talk more about what actually happening behind the scene. 
+
+But first, we need to generate our pair of key.
+
+The command we will be using is called, `ssh-keygen`.
+
+More importantly, we will be using the ed22529 algorithm (we will talk about this in-depth later). So the command should look like this, `ssh-keygen -t ed25519`
+
+After we run those command, we were prompted to choose the location of where we will stored the key. It then will create an `.ssh` folder in our choosened location, containing our private key (`id_ed25519`) and public key (`id_ed25519.pub`).
+
+Now... it's actually done, believe it or not. You might want to setup an ssh agent if you want (use the `eval "$(ssh-agent -s)"` command) but aside from that, your pair of magical key is good to go. If you want to setup an GitHub authentication using SSH, then just copy content your public key file to GitHub and.... just that actually, you don't need to do anything more (lol).
+
+I need to remind you tho, if you somehow lost this file, from like accidentally deleting it, or your ssd corrupt, or.. something, you **DO** need to create another ssh key pair and revoke your old key in the service you are using to authenticate.
+
+It also a good practice to have a different pair of key for different computer, 'cause if your laptop key is lost for example, then you just need to revoke that one key specifically and your other key, like your pc or server key, is still untouched.
+
+## The Algorithm of SSH Key
+
+Okay, now we're done of all of that, what is exactly `ssh-keygen` doing behind the scene to create those key??
+
+Ohhh boy, buckel up, 'cause this is gonna be a wild ride. Seriously, this is, without a doubt, my "ohhhh, that's how it works???!!" moment lol.
+
+What actually happen when we run those commad is that, `ssh-keygen` is not creating a two file, no no, it actually creating a two different set of **NUMBERS**.
+
+If you happened to see what contained in your public and private key file, you will see a bunch of random number. I say "random" here, but, they're not actually **that** random either.
+
+We're gonna talk about math here for a moment, I will try to make it simple (please don't go!!!!), but honestly you don't need to worry too much about it... I hope so.
+
+For example, your private key, in a concept, is like this:
+
+8173941739481749283819472917391....
+
+It's a collection of numbers that are really loooooooonggggggg.
+
+After it created this monster of a number, it then run an **algorithm**, an math operation that, when done, will be able to generate us our public key, which *based* on our private key.
+
+Remember how I talk about ed22519 earlier? Yeah, those are one of many algorithm that you can use to do this process. The reason why we choose this particular algorithm though.... well aside from the fact that everybody is using it, the reason is really comes down that it is one of the most secure, lightweight, and fast public key algorithm right now available.
+
+Ok, ok that's fine and all, but..... if we're basically creatin public key using the private key... can we just do the same thing but in reverse???
+
+This is one of, if not, my biggest question when I tried to learn about this concept. Because, if you think about it, it kinda makes sense right??
+
+If one number is created using a highly algorithmic mathematical operation based on another number, why can't we just run the same algorithm and reverse-engineering it?? Surely that's possible, right???
+
+Well, not quite. You see, not every math operation has it's "reverse".
+
+For example, for 5 + 7 = 12, sure you can "reverse" to 12 - 7 = 5. That's simple enough.
+
+Another example, let's use a color right now. You mix yellow and blue to produce green, great. But, can you "reverse" green back to blue and yellow???? Yeah, that's what I thought.
+
+We can't do this because **the information of the molecule of yellow and blue is already mixed.**
+
+Crypthography is the same, they want to also create/search a mathematical operation that are like that. An operatiom that can create something fast and easily, but to "reverse" it, will take a huge amount of work and time.
+
+Another example, this is more connected to the whole math theme going on. So, I give a computer a number, 123456789, and I want it to calculate, 123456789 mod 17.
+
+It will give a pretty fast response... 1. Just like that.
+
+But, if I now give the number 1... and ask it to "give me the starting number that's resulting in this number"....
+
+Well, sure it can, but the result will be 18,35,52,69,86,......
+
+Because all of that number is resulting in 1 if it mod by 17.
+
+So, notice how, there's an **information missing here that the machine cannot processed**. That's really the reason why these machine will take a long time to calculate the "private key", because they don't have enough information, there's just no known efficient enough algorithm to recover the private key from the public key. Especially considering a huge amount of number that are posiible to the starting number.
+
+Let's use another example finally (hopefully) gives you an understanding to these concept. 
+
+Imagine you have a private key, and for it to "find" the public key, it needs to travel 1.000.000.000 steps. But, at long last, it arrive at the destination and find the public key. 
+
+Now, if someone else see that, they can absolutely just concluded that, to find the "starting point" of private key, they just need walk back 1.000.000.000 steps right?
+
+But how did they do that? Even if they can walk back 1 million steps, they cannot entirely sure if it's really the starting point. They just now the "end point" not the entire "track"
+
+Now in theory, yes you can absolutely reverse-engineered yor way to find the private key, but buddy, it will surely takes a loooooooooonnggggg time. Probably even longer that waiting for GTA 6.... times 11 (kekw).
+
+This whole problem is called, **"Discrete Logarithm Problem"**. If you want to understand about this topic more in-depth, then feel free to do your own research, that's a whole new rabbit hole of information.
+
+Nowadays, there's not really a algorithm that are fast enough to reverse-engineered this whole mess. But, when that's happened, well, it will be an intresting sight to see.
+
+---
+
+# 🗞️ Challenge–Response Authentication
+
+So now we know that, for a service like GitHub to verify our identity, it required our device to "signed" something using our private key.
+
+What's that "something" you might ask? Well it's a "challenge".
+
+Allow me to break it down for you. So whenever we tried to interract with GitHub using SSH, it sends our device with a series of "challenge", in this case, we will use this number as challenge:
+
+928374982734987234
+
+GitHub basically said "if you're really WhyHorsey, then please signed this number". It kinda like when you go to a secret club or something, and the security guard ask you to say what he said perfectly while holding your identitiy card (something that totally happened and relatable, am I right?).
+
+After your device done signing those "challenge", it will send it back to GitHub who will then verify it using our public key, and... if it's valid, then we're in.
+
+Important note here, when our device "signed" those challenge, it will create a signature for that particular challenge spesifically.
+
+The challenge that GitHub sends is also random everytime we tried to authenticate.
+
+Why? Well, 'cause if someone tried to intervened when the transfering of our signature and signed challenge happened, and decided to "copy" it, then it will become quite a huge problem, don't you think?
+
+If GitHub and our device is not creating a random challenge plus a specific signature for that particular challenge respectively, then that person who just copy the message being delivered can now use that same message to authenticate to GitHub, and they will be in it with no problem.
+
+But, with this current system, everytime we tried to authenticate, a new challenge is created and a new signature unique to that challenge is also created. After it's done verifying, that challenge and signature now is gone and will not be used ever again, becoming invalid.
+
+This whole system is called **"Challenge–Response Authentication"**
+
+And this system is not only for SSH, it's also on TLS, Windows Hello, Passkey...... it's everywhere.
+
+## Known Hosts
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
 
 
 
