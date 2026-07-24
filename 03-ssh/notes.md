@@ -405,10 +405,10 @@ Now, you might be, after reading this, feel like that SSH is bad now because of 
 
 Like, for this to happened, the hacker need:
 
--To be in your connection line,
--Can intervened with that specific line,
--Be able to disguised as a sever,
--And everything happened at the same time as you first time connected.
+- To be in your connection line,
+- Can intervened with that specific line,
+- Be able to disguised as a sever,
+- And everything happened at the same time as you first time connected.
 
 Yeah, I rather roll in my newest gacha banner instead of hoping that THIS paritcular scenario is happening (kekw).
 
@@ -422,3 +422,169 @@ Well, GitHub for example publicly put out its SSH host key in their documentatio
 
 One thing that I found really intresting, is that, some big corporation actually just already have a list of different fingerprint of different server, and every laptop employee is already known all it hosts since the beggining.
 
+---
+
+# 📜 Command Breakdown 
+
+It's more of my personal notes, rather than something that I wanted to share, but feel free to use it as a basis if you also still learning.
+
+## `ssh-keygen`
+
+Generate a new SSH key pair.
+
+`ssh-keygen -t ed25519`
+
+**What it does:**
+
+- Generate a new private key.
+- Generate a matching public key.
+- Store both keys inside your .ssh directory (unless you choose another location).
+
+| Option         | Description                              |
+| -------------- | ---------------------------------------- |
+| `-t ed25519`   | Use the Ed25519 algorithm (recommended). |
+| `-C "comment"` | Add a comment (usually your email).      |
+| `-f filename`  | Specify a custom output filename.        |
+
+
+Example: 
+
+`ssh-keygen -t ed25519 -C "whyhorsey@example.com"`
+
+---
+
+## `cat`
+
+Display a content of a file (it also used outside of SSH).
+
+`cat ~/.ssh/id_ed25519.pub`
+
+**Why we use it:**
+
+To copy our public key before adding it to GitHub (or another service).
+
+Important: Never share your `id_ed25519` (private key). Only share id_ed25519.pub.
+
+It can also display your known hosts database:
+
+`cat ~/.ssh/known_hosts`
+
+---
+
+## `ssh-agent`
+
+Start an SSH agent.
+
+`eval "$(ssh-agent -s)"`
+
+**What it does:**
+
+Launch an SSH Agent process that can temporarily hold your decrypted private key in memory.
+
+Without an SSH Agent, you may need to type your passphrase every time your private key is used (i.e Authenticating to GitHub).
+
+---
+
+## `ssh-add`
+
+Load a private key into the SSH agant.
+
+`ssh-add ~/.ssh/id_ed25519`
+
+**What it does:**
+
+- Ask for your passphrase once.
+- Decrypt the private key.
+- Store it securely inside the SSH Agent (RAM).
+
+After that, SSH can use the key automatically until the agent stops (when rebooting your computer).
+
+---
+
+## `ssh`
+
+Connect to another computer using SSH.
+
+`ssh username@hostname`
+
+Example:
+
+`ssh whyhorsey@example.com` or `ssh whyhorsey@192.168.1.10`
+
+**What happens behind the scenes:**
+
+- Verify the server identity using known_hosts.
+- Perform Challenge-Response Authentication.
+- Create an encrypted communication channel.
+- Give you a remote shell.
+
+---
+
+## ls ~/.ssh 
+
+List files inside your SSH directory.
+
+Usually contains:
+
+- `id_ed25519`
+- `id_ed25519.pub`
+- `known_hosts`
+- `config` (optional)
+
+---
+
+## `ssh-T`
+
+Test authentication without opening a shell.
+
+Example:
+
+`ssh -T git@github.com`
+
+Typical output:
+
+"Hi WhyHorsey! You've successfully authenticated..."
+
+Very useful when testing whether your SSH key is configured correctly.
+
+--- 
+
+## `ssh-copy-id` (Linux Only)
+
+Copy your public key to another machine.
+
+`ssh-copy-id username@hostname`
+
+Instead of manually editing the remote authorized_keys file, this command does it automatically.
+
+(I actaully haven't used this yet, but it's most likely one of the first commands I will encounter when working with servers.)
+
+---
+
+## Important Files
+
+| Command                | Topic                            |
+| ---------------------- | -------------------------------- |
+| `scp`                  | Secure file transfer             |
+| `sftp`                 | Interactive file transfer        |
+| `ssh -L`               | Local Port Forwarding            |
+| `ssh -R`               | Remote Port Forwarding           |
+| `ssh -D`               | Dynamic SOCKS Proxy              |
+| `ssh-keyscan`          | Retrieve server host keys        |
+| `ssh-keygen -R`        | Remove a host from `known_hosts` |
+| `~/.ssh/config`        | Simplify SSH connections         |
+| `ssh-agent` auto-start | Convenience & workflow           |
+
+---
+
+# ✍️ Closing Thoughts
+
+This is the gist of all the knowledge I have absorbed in the last few days (lol). Honestly, this topic went by pretty quickly, which I didn't realize after it was all over.
+
+Like the Git chapter, this one is also going to shelved for now, but probably not for long.
+
+After this, the plan is to learn networking, and honestly, that might be one of the steps of learning more about server and stuff.
+
+I also already have an old laptop that pretty perfect for messing around when I get to learning about home server, so definitely wait for it hahaha.
+
+Thanks for reading btw, especially if you're reading from notes 1 (kekw).
