@@ -563,17 +563,14 @@ Instead of manually editing the remote authorized_keys file, this command does i
 
 ## Important Files
 
-| Command                | Topic                            |
-| ---------------------- | -------------------------------- |
-| `scp`                  | Secure file transfer             |
-| `sftp`                 | Interactive file transfer        |
-| `ssh -L`               | Local Port Forwarding            |
-| `ssh -R`               | Remote Port Forwarding           |
-| `ssh -D`               | Dynamic SOCKS Proxy              |
-| `ssh-keyscan`          | Retrieve server host keys        |
-| `ssh-keygen -R`        | Remove a host from `known_hosts` |
-| `~/.ssh/config`        | Simplify SSH connections         |
-| `ssh-agent` auto-start | Convenience & workflow           |
+| File              | Purpose                                                                    |
+| ----------------- | -------------------------------------------------------------------------- |
+| `id_ed25519`      | Your private key. Never share it.                                          |
+| `id_ed25519.pub`  | Your public key. Safe to share.                                            |
+| `known_hosts`     | Stores fingerprints of trusted servers.                                    |
+| `authorized_keys` | Stores public keys allowed to log in to a server (we'll learn this later). |
+| `config`          | SSH client configuration file (we'll learn this later).                    |
+
 
 ---
 
